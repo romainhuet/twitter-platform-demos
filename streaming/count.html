@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Twitter Streaming APIs Demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Romain Huet">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/twitter-demos.css" type="text/css">
+    <link rel="shortcut icon" href="//abs.twimg.com/favicons/favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Twitter</a>
+          <h1 class="navbar-text">Twitter Streaming APIs Demo</h1>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="https://twitter.com/romainhuet" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @romainhuet</a>
+          </li>
+          <li>
+            <a href="https://twitter.com/TwitterDev" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @TwitterDev</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container content">
+      <div class="page-header">
+        <h2>Counting Tweets… <small>Receiving Tweets from <code>GET statuses/sample</code></small></h2>
+      </div>
+      <div class="disc">
+        <div id="count">0</div>
+        <p><strong id="tps">0</strong> TPS</p>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://localhost');
+      var count = 0;
+      var now, start = new Date();
+      var tps = 0;
+
+      // Debounce function borrowed from Underscore.js.
+      function debounce(func, wait, immediate) {
+        var timeout, result;
+        return function() {
+          var context = this, args = arguments;
+          var later = function() {
+            timeout = null;
+            if (!immediate) result = func.apply(context, args);
+          };
+          var callNow = immediate && !timeout;
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+          if (callNow) result = func.apply(context, args);
+          return result;
+        };
+      }
+
+      // Display the updated count.
+      function updateCount() {
+        document.getElementById('count').innerText = count;
+      }
+
+      // Display the udpated the TPS.
+      setInterval(function() {
+        now = new Date();
+        tps = parseInt(1000 * count / (now - start), 10);
+        document.getElementById('tps').innerText = tps;
+      }, 1000);
+
+      // Subscribe to `connect` events on the socket.
+      socket.on('connect', function() {
+        console.log('Socket connection established.');
+        // Send a `stream` event to start streaming.
+        socket.emit('stream', { endpoint: 'statuses/sample' });
+      });
+
+      // Subscribe to `disconnect` events on the socket.
+      socket.on('disconnect', function() {
+        console.log('Socket connection interrupted.');
+      });
+
+      // Subscribe to Tweet events on the socket.
+      socket.on('tweet', function(data) {
+        // Update the count.
+        count++;
+        // Debounce the function updating the count to make sure it's not called too many times per second.
+        debounce(updateCount, 100)();
+        // Note: We could have sent only the updated count over the socket for this example,
+        // but having the Tweet information here enable to do more on your interface if you wish.
+      });
+    </script>
+    <script async src="//platform.twitter.com/widgets.js"></script>
+  </body>
+</html>

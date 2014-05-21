@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Twitter Streaming APIs Demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Romain Huet">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/twitter-demos.css" type="text/css">
+    <link rel="shortcut icon" href="//abs.twimg.com/favicons/favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Twitter</a>
+          <h1 class="navbar-text">Twitter Streaming APIs Demo</h1>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="https://twitter.com/romainhuet" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @romainhuet</a>
+          </li>
+          <li>
+            <a href="https://twitter.com/TwitterDev" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @TwitterDev</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="content container">
+      <div class="alert alert-warning fade in">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <p>This demo uses the <a href="https://dev.twitter.com/docs/custom-timelines">Custom Timelines API Beta</a>, but the main functionality works without it. Please <a href="https://dev.twitter.com/form/request-participation-custom-timelines-beta-api">apply for access</a> if you would like to participate in the beta program.</p>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="panel panel-default" id="panel-streaming-options">
+            <div class="panel-heading">
+              <h3 class="panel-title">Streaming Options</h3>
+            </div>
+            <div class="panel-body">
+              <form class="form-horizontal" role="form">
+                <div class="form-group">
+                  <label for="input-keywords" class="col-sm-2 control-label">Keywords</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="input-keywords" value="">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input-users" class="col-sm-2 control-label">Users</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="input-users">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input-locations" class="col-sm-2 control-label">Locations</label>
+                  <div class="col-sm-10">
+                    <div class="map" style="position: relative; top: 0; height: 200px; border: 1px solid #ccc; border-radius: 4px;"></div>
+                    <input type="hidden" class="form-control" id="input-locations" value="">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input-language" class="col-sm-2 control-label">Language</label>
+                  <div class="col-sm-10">
+                    <select class="form-control" id="select-language" name="language">
+                      <option value="" selected="selected">Any Language</option>
+                      <option value="am">Amharic (አማርኛ)</option>
+                      <option value="ar">Arabic (العربية)</option>
+                      <option value="bg">Bulgarian (Български)</option>
+                      <option value="bn">Bengali (বাংলা)</option>
+                      <option value="bo">Tibetan (བོད་སྐད)</option>
+                      <option value="chr">Cherokee (ᏣᎳᎩ)</option>
+                      <option value="da">Danish (Dansk)</option>
+                      <option value="de">German (Deutsch)</option>
+                      <option value="dv">Maldivian (ދިވެހި)</option>
+                      <option value="el">Greek (Ελληνικά)</option>
+                      <option value="en">English (English)</option>
+                      <option value="es">Spanish (Español)</option>
+                      <option value="fa">Persian (فارسی)</option>
+                      <option value="fi">Finnish (Suomi)</option>
+                      <option value="fr">French (Français)</option>
+                      <option value="gu">Gujarati (ગુજરાતી)</option>
+                      <option value="iw">Hebrew (עברית)</option>
+                      <option value="hi">Hindi (हिंदी)</option>
+                      <option value="hu">Hungarian (Magyar)</option>
+                      <option value="hy">Armenian (Հայերեն)</option>
+                      <option value="in">Indonesian (Bahasa Indonesia)</option>
+                      <option value="is">Icelandic (Íslenska)</option>
+                      <option value="it">Italian (Italiano)</option>
+                      <option value="iu">Inuktitut (ᐃᓄᒃᑎᑐᑦ)</option>
+                      <option value="ja">Japanese (日本語)</option>
+                      <option value="ka">Georgian (ქართული)</option>
+                      <option value="km">Khmer (ខ្មែរ)</option>
+                      <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                      <option value="ko">Korean (한국어)</option>
+                      <option value="lo">Lao (ລາວ)</option>
+                      <option value="lt">Lithuanian (Lietuvių)</option>
+                      <option value="ml">Malayalam (മലയാളം)</option>
+                      <option value="my">Myanmar (မြန်မာဘာသာ)</option>
+                      <option value="ne">Nepali (नेपाली)</option>
+                      <option value="nl">Dutch (Nederlands)</option>
+                      <option value="no">Norwegian (Norsk)</option>
+                      <option value="or">Oriya (ଓଡ଼ିଆ)</option>
+                      <option value="pa">Panjabi (ਪੰਜਾਬੀ)</option>
+                      <option value="pl">Polish (Polski)</option>
+                      <option value="pt">Portuguese (Português)</option>
+                      <option value="ru">Russian (Русский)</option>
+                      <option value="si">Sinhala (සිංහල)</option>
+                      <option value="sv">Swedish (Svenska)</option>
+                      <option value="ta">Tamil (தமிழ்)</option>
+                      <option value="te">Telugu (తెలుగు)</option>
+                      <option value="th">Thai (ไทย)</option>
+                      <option value="tl">Tagalog (Tagalog)</option>
+                      <option value="tr">Turkish (Türkçe)</option>
+                      <option value="ur">Urdu (ﺍﺭﺩﻭ)</option>
+                      <option value="vi">Vietnamese (Tiếng Việt)</option>
+                      <option value="zh">Chinese (中文)</option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="panel-footer center">
+              <button type="button" class="btn btn-primary" id="btn-start"><span class="glyphicon glyphicon-play"></span> Start</button>
+              <button type="button" class="btn btn-default" id="btn-pause"><span class="glyphicon glyphicon-pause"></span> Pause</button>
+              <button type="button" class="btn btn-default" id="btn-reset"><span class="glyphicon glyphicon-repeat"></span> Reset</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <p id="tweets-badge" class="badge"><span id="tweets-current">#</span> / <span id="tweets-total">#</span></p>
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse-tweets">
+                    <h3 class="panel-title">Tweets</h3>
+                  </a>
+                </h4>
+              </div>
+              <div id="collapse-tweets" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  <div id="tweet"></div>
+                  <div id="tweets-notice" class="alert alert-info fade in">
+                    <p>No Tweets to display for now.</p>
+                    <p><small>Please check your options if Tweets take longer to come in than you expect while streaming.</small></p>
+                  </div>
+                </div>
+                <div class="panel-footer center" id="tweet-actions">
+                  <button type="button" class="btn btn-default" id="btn-prev-tweet"><span class="glyphicon glyphicon-chevron-left"></span> Previous Tweet</button>
+                  <button type="button" class="btn btn-primary" id="btn-add-tweet"><span class="glyphicon glyphicon-plus"></span> Add Tweet</button>
+                  <button type="button" class="btn btn-default" id="btn-next-tweet"><span class="glyphicon glyphicon-chevron-right"></span> Next Tweet</button>
+                </div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse-collection">
+                    Collection
+                  </a>
+                </h4>
+              </div>
+              <div id="collapse-collection" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <a class="twitter-timeline" data-widget-id="398522355804151808" data-theme="light" data-custom-timeline-id="401517619594805248">Romain’s Demo Collection</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://localhost');
+      var tweets = [];
+      var tweetIndex = -1;
+      var timelineId = 'custom-401517619594805248';
+      var isStreaming = false;
+      var map, rectangle, rectangleNotice, errorNotice, currentLocation;
+
+      // Subscribe to `connect` events on the socket.
+      socket.on('connect', function() {
+        console.log('Socket connection established.');
+      });
+
+      // Subscribe to `disconnect` events on the socket.
+      socket.on('disconnect', function() {
+        console.log('Socket connection interrupted.');
+      });
+
+      // Subscribe to `tweet` events on the socket.
+      socket.on('tweet', function(tweet) {
+        pushTweet(tweet);
+        twttr.widgets.load();
+      });
+
+      // Clear the incoming Tweets panel.
+      function resetTweets() {
+        tweets = [];
+        tweetIndex = -1;
+        $('#tweet').empty();
+        $('#tweet-actions').hide();
+        $('#tweets-notice').show();
+        $('#tweets-badge').hide();
+        $('#btn-pause').hide();
+        $('#btn-reset').hide();
+      }
+
+      // Add a new Tweet to the queue.
+      function pushTweet(tweet) {
+        tweets.push(tweet);
+        $('#tweets-total').text(tweets.length);
+        if (tweets.length === 1) {
+          displayTweet(0);
+          $('#tweet-actions').show();
+          $('#tweets-notice').hide();
+          $('#tweets-badge').show();
+        }
+        $('#btn-next-tweet').toggleClass('disabled', tweetIndex === tweets.length - 1);
+      }
+
+      // Display an embedded Tweet in the panel.
+      function displayTweet(index) {
+        if (tweets[index]) {
+          var tweet = tweets[index];
+          tweetIndex = index;
+          $('#tweets-current').text(index + 1);
+          $('#tweet').html('<blockquote class="twitter-tweet" align="center"><p>' + tweet.text + '</p><small>@' + tweet.user.screen_name + ' <a href="https://twitter.com/' + tweet.user.screen_name + '/status/' + tweet.id_str + '">' + tweet.created_at + '</a></small></blockquote>');
+          twttr.widgets.load();
+        }
+        $('#btn-prev-tweet').toggleClass('disabled', tweetIndex === 0);
+        $('#btn-next-tweet').toggleClass('disabled', tweetIndex === tweets.length - 1);
+      }
+
+      // Go to previous Tweet (if any).
+      function displayPreviousTweet() {
+        if (tweetIndex > 0) {
+          tweetIndex--;
+          displayTweet(tweetIndex);
+        }
+      }
+
+      // Go to next Tweet (if any).
+      function displayNextTweet() {
+        if (tweetIndex < tweets.length - 1) {
+          tweetIndex++;
+          displayTweet(tweetIndex);
+        }
+      }
+
+      // Add the current Tweet to the Custom Timeline.
+      function addTweetToTimeline() {
+        socket.emit('timeline', {
+          action: 'add',
+          timelineId: timelineId,
+          tweetId: tweets[tweetIndex].id_str
+        });
+      }
+
+      // Callback function when the geolocation is retrieved.
+      function geolocationSuccess(position) {
+        if (currentLocation) {
+          return;
+        }
+
+        currentLocation = position;
+        var longitude = position.coords.longitude;
+        var latitude = position.coords.latitude;
+
+        // Position the map.
+        var centerPosition = new google.maps.LatLng(latitude, longitude);
+        var centerMarker = new google.maps.Marker({
+          map: map,
+          position: centerPosition,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 5,
+            strokeColor: '#55acee'
+          }
+        });
+        map.setCenter(centerPosition);
+
+        // Define a rectangle and set its editable/draggable properties to true.
+        var bounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(latitude - 0.5, longitude - 1),
+          new google.maps.LatLng(latitude + 0.5, longitude + 1)
+        );
+        rectangle = new google.maps.Rectangle({
+          bounds: bounds,
+          editable: true,
+          draggable: true,
+          strokeColor: '#fff'
+        });
+        rectangle.setMap(map);
+
+        // Define an info window on the map.
+        rectangleNotice = new google.maps.InfoWindow({
+          map: map,
+          position: bounds.getNorthEast(),
+          content: 'Drag/resize to enable location streaming.'
+        });
+
+        // Add an event listener on the rectangle.
+        google.maps.event.addListener(rectangle, 'bounds_changed', mapRectangleChanged);
+      }
+
+      // Callback function when the geolocation is not supported.
+      function geolocationError() {
+        var options = {
+          map: map,
+          position: new google.maps.LatLng(48.8566, 2.3522),
+          content: 'Oops, location not found.'
+        };
+
+        errorNotice = new google.maps.InfoWindow(options);
+        map.setCenter(options.position);
+      }
+
+      // Callback function when the rectangle on the map is changed.
+      function mapRectangleChanged(event) {
+        // String representing the bounding box (SW coordinates, NE coordinates).
+        var locations = rectangle.getBounds().getSouthWest().lng() + ',' +
+                        rectangle.getBounds().getSouthWest().lat() + ',' +
+                        rectangle.getBounds().getNorthEast().lng() + ',' +
+                        rectangle.getBounds().getNorthEast().lat();
+
+        // Add this string in the hidden input.
+        $('#input-locations').val(locations);
+
+        // Close the rectangle notice.
+        rectangleNotice.close();
+
+        // Change the stroke color to provide visual feedback.
+        rectangle.setOptions({
+          strokeColor: '#000'
+        });
+      }
+
+      // Initialize the map.
+      function initializeMap() {
+        var mapOptions = {
+          zoom: 5
+        };
+        map = new google.maps.Map($('.map')[0], mapOptions);
+
+        // Request the user geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError);
+        } else {
+          geolocationError();
+        }
+      }
+      // Callback when the DOM is ready.
+      $(function() {
+        // Reset Tweets initially.
+        resetTweets();
+
+        // Emit `stream` with filter options on the socket when clicking Start.
+        $('#btn-start').click(function() {
+          var options = {};
+          if ($('#input-keywords').val()) {
+            options.keywords = $('#input-keywords').val();
+          }
+          if ($('#input-users').val()) {
+            options.users = $('#input-users').val();
+          }
+          if ($('#input-locations').val()) {
+            options.locations = $('#input-locations').val();
+          }
+          if ($('#select-language').val()) {
+            options.language = $('#select-language').val();
+          }
+          socket.emit('stream', options);
+          isStreaming = true;
+          $(this).hide();
+          $('#btn-pause').show();
+          $('#btn-reset').show();
+        });
+
+        // Emit `stop` on the socket when clicking Pause.
+        $('#btn-pause').click(function() {
+          socket.emit('stop');
+          isStreaming = false;
+          $(this).hide();
+          $('#btn-start').show();
+        });
+
+        // Reset Incoming Tweets when clicking Reset.
+        $('#btn-reset').click(function() {
+          socket.emit('stop');
+          isStreaming = false;
+          $(this).hide();
+          $('#btn-start').show();
+          resetTweets();
+        });
+
+        // Handle Tweets display when clicking on the corresponding buttons.
+        $('#btn-prev-tweet').click(displayPreviousTweet);
+        $('#btn-next-tweet').click(displayNextTweet);
+        $('#btn-add-tweet').click(addTweetToTimeline);
+      });
+
+      // Listen to the load event.
+      google.maps.event.addDomListener(window, 'load', initializeMap);
+    </script>
+    <script async src="//platform.twitter.com/widgets.js"></script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Twitter Streaming APIs &amp; AR.Drone Demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Romain Huet">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/twitter-demos.css" type="text/css">
+    <link rel="shortcut icon" href="//abs.twimg.com/favicons/favicon.ico" type="image/x-icon">
+    <script src="/dronestream/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Twitter</a>
+          <h1 class="navbar-text">Twitter Streaming APIs &amp; AR.Drone Demo</h1>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="https://twitter.com/romainhuet" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @romainhuet</a>
+          </li>
+          <li>
+            <a href="https://twitter.com/TwitterDev" class="twitter-follow-button" data-size="large" data-show-count="false">Follow @TwitterDev</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="content">
+      <div id="stream" class="camera"></div>
+    </div>
+    <script>
+      var stream = new NodecopterStream(document.getElementById('stream'));
+    </script>
+    <script async src="//platform.twitter.com/widgets.js"></script>
+  </body>
+</html>
